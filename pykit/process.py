@@ -46,7 +46,7 @@ class Process(object):
     def start(self, path, kill_process_on_exit=True, anti_anti_debugger=True, blocking=True):
         def function():
             os.chdir(os.path.dirname(path))
-            self.debugger = Debug(HookingEventHandler(self.hooks), bKillOnExit=anti_anti_debugger)
+            self.debugger = Debug(HookingEventHandler(self.hooks), bKillOnExit=kill_process_on_exit, bHostileCode=anti_anti_debugger)
             self.debugger.execv([path])
             self._loop()
 
@@ -54,9 +54,9 @@ class Process(object):
             function()
         start_new_thread(function)
 
-    def attach(self, pid, anti_anti_debugger=True, blocking=True):
+    def attach(self, pid, kill_process_on_exit=False, anti_anti_debugger=True, blocking=True):
         def function():
-            self.debugger = Debug(HookingEventHandler(self.hooks), bHostileCode=anti_anti_debugger)
+            self.debugger = Debug(HookingEventHandler(self.hooks), bKillOnExit=kill_process_on_exit, bHostileCode=anti_anti_debugger)
             self.debugger.attach(pid)
             self._loop()
 
