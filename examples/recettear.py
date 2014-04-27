@@ -74,7 +74,7 @@ class VacuumHack(object):
 def main():
     process = Process(api_hooks=None)
     vacuum_hack = VacuumHack()
-    process.hook_function(MOVE_MONSTER_FUNCTION_ADDRESS, post_callback=vacuum_hack.move_monster, signature=(PVOID,))
+    process.hook_function(MOVE_MONSTER_FUNCTION_ADDRESS, vacuum_hack.move_monster, signature=(PVOID,))
     process.start(PATH, blocking=False)
     pythoncom.PumpMessages()
 
