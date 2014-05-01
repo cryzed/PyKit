@@ -4,9 +4,10 @@ from winappdbg import EventHandler, Debug, System
 
 
 class HookingEventHandler(EventHandler):
-    def __init__(self, hooks):
+    def __init__(self, hooks, api_hooks=None):
         EventHandler.__init__(self)
         self.hooks = hooks
+        self.apiHooks = api_hooks
 
     def create_process(self, event):
         pid = event.get_pid()
@@ -27,7 +28,7 @@ class start_new_thread(threading.Thread):
 class Process(object):
     def __init__(self, api_hooks=None):
         System.request_debug_privileges()
-        self.apiHooks = api_hooks
+        self.api_hooks = api_hooks
         self.hooks = []
         self.debugger = None
 
@@ -46,7 +47,7 @@ class Process(object):
     def start(self, path, kill_process_on_exit=True, anti_anti_debugger=True, blocking=True):
         def function():
             os.chdir(os.path.dirname(path))
-            self.debugger = Debug(HookingEventHandler(self.hooks), bKillOnExit=kill_process_on_exit, bHostileCode=anti_anti_debugger)
+            self.debugger = Debug(HookingEventHandler(self.hooks, self.api_hooks), bKillOnExit=kill_process_on_exit, bHostileCode=anti_anti_debugger)
             self.debugger.execv([path])
             self._loop()
 
@@ -56,7 +57,7 @@ class Process(object):
 
     def attach(self, pid, kill_process_on_exit=False, anti_anti_debugger=True, blocking=True):
         def function():
-            self.debugger = Debug(HookingEventHandler(self.hooks), bKillOnExit=kill_process_on_exit, bHostileCode=anti_anti_debugger)
+            self.debugger = Debug(HookingEventHandler(self.hooks, self.api_hooks), bKillOnExit=kill_process_on_exit, bHostileCode=anti_anti_debugger)
             self.debugger.attach(pid)
             self._loop()
 
