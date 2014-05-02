@@ -38,7 +38,6 @@ class Screen(object):
         x, y = x1, y1
 
         while (not limit or len(locations) < limit) and y <= y2:
-            print x, y
             color_ = self.get_pixel_color((x, y))
             if color_ == color:
                 locations.append((x, y))
