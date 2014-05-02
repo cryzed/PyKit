@@ -44,7 +44,7 @@ class Process(object):
 
         self.hooks.append((address, pre_callback, post_callback, signature))
 
-    def start(self, path, kill_process_on_exit=True, anti_anti_debugger=True, blocking=True):
+    def start(self, path, kill_process_on_exit=True, anti_anti_debugger=False, blocking=True):
         def function():
             os.chdir(os.path.dirname(path))
             self.debugger = Debug(HookingEventHandler(self.hooks, self.api_hooks), bKillOnExit=kill_process_on_exit, bHostileCode=anti_anti_debugger)
@@ -55,7 +55,7 @@ class Process(object):
             function()
         start_new_thread(function)
 
-    def attach(self, pid, kill_process_on_exit=False, anti_anti_debugger=True, blocking=True):
+    def attach(self, pid, kill_process_on_exit=False, anti_anti_debugger=False, blocking=True):
         def function():
             self.debugger = Debug(HookingEventHandler(self.hooks, self.api_hooks), bKillOnExit=kill_process_on_exit, bHostileCode=anti_anti_debugger)
             self.debugger.attach(pid)

@@ -76,8 +76,7 @@ def main():
     vacuum_hack = VacuumHack()
     process.hook_function(MOVE_MONSTER_FUNCTION_ADDRESS, vacuum_hack.move_monster, signature=(PVOID,))
 
-    # Recettear doesn't start with anti-debugger mechanisms for some reason
-    process.start(PATH, blocking=False, anti_anti_debugger=False)
+    process.start(PATH, blocking=False)
     pythoncom.PumpMessages()
 
 
